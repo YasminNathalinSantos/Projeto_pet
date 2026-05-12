@@ -1,0 +1,466 @@
+{
+	"info": {
+		"_postman_id": "projeto-pet-fiap-2026",
+		"name": "Projeto Pet - FIAP 2026",
+		"description": "Coleção de requisições para testar a API de Gestão da Jornada do Pet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "01 - Autenticação",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/autenticacao/login?usuario=RM1&senha=senha&duracao=60",
+							"host": ["{{base_url}}"],
+							"path": ["autenticacao", "login"],
+							"query": [
+								{"key": "usuario", "value": "RM1"},
+								{"key": "senha", "value": "senha"},
+								{"key": "duracao", "value": "60"}
+							]
+						},
+						"description": "Realiza login e retorna token JWT. Copie o token e cole na variável {{token}}"
+					}
+				}
+			]
+		},
+		{
+			"name": "02 - Tutores",
+			"item": [
+				{
+					"name": "Listar Todos os Tutores",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {"raw": "{{base_url}}/tutores/todos", "host": ["{{base_url}}"], "path": ["tutores", "todos"]}
+					}
+				},
+				{
+					"name": "Buscar Tutor por ID",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {"raw": "{{base_url}}/tutores/1", "host": ["{{base_url}}"], "path": ["tutores", "1"]}
+					}
+				},
+				{
+					"name": "Inserir Tutor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"João Silva\",\n  \"cpf\": \"000.000.001-91\",\n  \"email\": \"joao@email.com\",\n  \"telefone\": \"11988887777\",\n  \"dataCadastro\": \"2025-01-01\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/tutores/inserir", "host": ["{{base_url}}"], "path": ["tutores", "inserir"]}
+					}
+				},
+				{
+					"name": "Atualizar Tutor",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Ana Lima Atualizada\",\n  \"cpf\": \"123.456.789-00\",\n  \"email\": \"ana.nova@email.com\",\n  \"telefone\": \"11999990001\",\n  \"dataCadastro\": \"2024-01-10\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/tutores/1", "host": ["{{base_url}}"], "path": ["tutores", "1"]}
+					}
+				},
+				{
+					"name": "Remover Tutor",
+					"request": {
+						"method": "DELETE",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {"raw": "{{base_url}}/tutores/4", "host": ["{{base_url}}"], "path": ["tutores", "4"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "03 - Pets",
+			"item": [
+				{
+					"name": "Listar Todos os Pets",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {"raw": "{{base_url}}/pets/todos", "host": ["{{base_url}}"], "path": ["pets", "todos"]}
+					}
+				},
+				{
+					"name": "Pets Paginados (page=0, size=2, ordenarPor=nome)",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {
+							"raw": "{{base_url}}/pets/paginados?page=0&size=2&ordenarPor=nome",
+							"host": ["{{base_url}}"],
+							"path": ["pets", "paginados"],
+							"query": [
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "2"},
+								{"key": "ordenarPor", "value": "nome"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Buscar Pet por ID",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {"raw": "{{base_url}}/pets/1", "host": ["{{base_url}}"], "path": ["pets", "1"]}
+					}
+				},
+				{
+					"name": "Buscar Pets por Substring (caching)",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {
+							"raw": "{{base_url}}/pets/substring_caching?substring=lab",
+							"host": ["{{base_url}}"],
+							"path": ["pets", "substring_caching"],
+							"query": [{"key": "substring", "value": "lab"}]
+						}
+					}
+				},
+				{
+					"name": "Buscar Pets por Espécie (otimizado JPQL)",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {
+							"raw": "{{base_url}}/pets/especie_otimizado?especie=CACHORRO",
+							"host": ["{{base_url}}"],
+							"path": ["pets", "especie_otimizado"],
+							"query": [{"key": "especie", "value": "CACHORRO"}]
+						}
+					}
+				},
+				{
+					"name": "Buscar Pets por Raça",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {
+							"raw": "{{base_url}}/pets/raca?raca=Labrador",
+							"host": ["{{base_url}}"],
+							"path": ["pets", "raca"],
+							"query": [{"key": "raca", "value": "Labrador"}]
+						}
+					}
+				},
+				{
+					"name": "Inserir Pet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tutor\": {\"id\": 1},\n  \"nome\": \"Bolinha\",\n  \"especie\": \"CACHORRO\",\n  \"raca\": \"Vira-lata\",\n  \"dataNascimento\": \"2022-03-15\",\n  \"peso\": 12.5,\n  \"ativo\": true\n}"
+						},
+						"url": {"raw": "{{base_url}}/pets/inserir", "host": ["{{base_url}}"], "path": ["pets", "inserir"]}
+					}
+				},
+				{
+					"name": "Atualizar Pet",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tutor\": {\"id\": 1},\n  \"nome\": \"Rex Atualizado\",\n  \"especie\": \"CACHORRO\",\n  \"raca\": \"Labrador\",\n  \"dataNascimento\": \"2020-05-10\",\n  \"peso\": 30.0,\n  \"ativo\": true\n}"
+						},
+						"url": {"raw": "{{base_url}}/pets/1", "host": ["{{base_url}}"], "path": ["pets", "1"]}
+					}
+				},
+				{
+					"name": "Remover Pet",
+					"request": {
+						"method": "DELETE",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {"raw": "{{base_url}}/pets/6", "host": ["{{base_url}}"], "path": ["pets", "6"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "04 - Tipos de Cuidado",
+			"item": [
+				{
+					"name": "Listar Todos os Tipos de Cuidado (caching)",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {"raw": "{{base_url}}/tipos_cuidado/todos", "host": ["{{base_url}}"], "path": ["tipos_cuidado", "todos"]}
+					}
+				},
+				{
+					"name": "Buscar Tipo de Cuidado por ID",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {"raw": "{{base_url}}/tipos_cuidado/1", "host": ["{{base_url}}"], "path": ["tipos_cuidado", "1"]}
+					}
+				},
+				{
+					"name": "Buscar por Prioridade (JPQL)",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {
+							"raw": "{{base_url}}/tipos_cuidado/prioridade?prioridade=ALTA",
+							"host": ["{{base_url}}"],
+							"path": ["tipos_cuidado", "prioridade"],
+							"query": [{"key": "prioridade", "value": "ALTA"}]
+						}
+					}
+				},
+				{
+					"name": "Inserir Tipo de Cuidado",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Vacina Raiva\",\n  \"descricao\": \"Vacina antirrábica obrigatória\",\n  \"intervaloDias\": 365,\n  \"prioridade\": \"ALTA\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/tipos_cuidado/inserir", "host": ["{{base_url}}"], "path": ["tipos_cuidado", "inserir"]}
+					}
+				},
+				{
+					"name": "Atualizar Tipo de Cuidado",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Banho e Tosa Premium\",\n  \"descricao\": \"Higiene e estética completa\",\n  \"intervaloDias\": 21,\n  \"prioridade\": \"BAIXA\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/tipos_cuidado/3", "host": ["{{base_url}}"], "path": ["tipos_cuidado", "3"]}
+					}
+				},
+				{
+					"name": "Remover Tipo de Cuidado",
+					"request": {
+						"method": "DELETE",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {"raw": "{{base_url}}/tipos_cuidado/6", "host": ["{{base_url}}"], "path": ["tipos_cuidado", "6"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "05 - Eventos de Cuidado",
+			"item": [
+				{
+					"name": "Listar Todos os Eventos",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {"raw": "{{base_url}}/eventos/todos", "host": ["{{base_url}}"], "path": ["eventos", "todos"]}
+					}
+				},
+				{
+					"name": "Eventos Paginados (page=0, size=3, ordenarPor=dataPrevista)",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {
+							"raw": "{{base_url}}/eventos/paginados?page=0&size=3&ordenarPor=dataPrevista",
+							"host": ["{{base_url}}"],
+							"path": ["eventos", "paginados"],
+							"query": [
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "3"},
+								{"key": "ordenarPor", "value": "dataPrevista"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Buscar Evento por ID",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {"raw": "{{base_url}}/eventos/1", "host": ["{{base_url}}"], "path": ["eventos", "1"]}
+					}
+				},
+				{
+					"name": "Listar Eventos ATRASADOS (caching - além do CRUD)",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {"raw": "{{base_url}}/eventos/atrasados", "host": ["{{base_url}}"], "path": ["eventos", "atrasados"]}
+					}
+				},
+				{
+					"name": "Próximos Cuidados por Pet (além do CRUD)",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {
+							"raw": "{{base_url}}/eventos/proximos_cuidados?petId=1",
+							"host": ["{{base_url}}"],
+							"path": ["eventos", "proximos_cuidados"],
+							"query": [{"key": "petId", "value": "1"}]
+						}
+					}
+				},
+				{
+					"name": "Buscar por Status com Projection - otimizado (caching)",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {
+							"raw": "{{base_url}}/eventos/status_otimizado?status=PENDENTE",
+							"host": ["{{base_url}}"],
+							"path": ["eventos", "status_otimizado"],
+							"query": [{"key": "status", "value": "PENDENTE"}]
+						}
+					}
+				},
+				{
+					"name": "Buscar por Status (JPQL)",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {
+							"raw": "{{base_url}}/eventos/status?status=ATRASADO",
+							"host": ["{{base_url}}"],
+							"path": ["eventos", "status"],
+							"query": [{"key": "status", "value": "ATRASADO"}]
+						}
+					}
+				},
+				{
+					"name": "Buscar por Período (SQL Nativo)",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {
+							"raw": "{{base_url}}/eventos/periodo?dataInicio=2025-01-01&dataFim=2025-12-31",
+							"host": ["{{base_url}}"],
+							"path": ["eventos", "periodo"],
+							"query": [
+								{"key": "dataInicio", "value": "2025-01-01"},
+								{"key": "dataFim", "value": "2025-12-31"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Inserir Evento de Cuidado",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pet\": {\"id\": 2},\n  \"tipoCuidado\": {\"id\": 1},\n  \"dataPrevista\": \"2025-08-22\",\n  \"dataRealizada\": null,\n  \"status\": \"PENDENTE\",\n  \"observacao\": \"Vacina anual agendada\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/eventos/inserir", "host": ["{{base_url}}"], "path": ["eventos", "inserir"]}
+					}
+				},
+				{
+					"name": "Atualizar Evento (marcar como REALIZADO)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pet\": {\"id\": 1},\n  \"tipoCuidado\": {\"id\": 3},\n  \"dataPrevista\": \"2025-01-15\",\n  \"dataRealizada\": \"2025-05-12\",\n  \"status\": \"REALIZADO\",\n  \"observacao\": \"Banho e tosa realizados com sucesso\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/eventos/2", "host": ["{{base_url}}"], "path": ["eventos", "2"]}
+					}
+				},
+				{
+					"name": "Remover Evento",
+					"request": {
+						"method": "DELETE",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {"raw": "{{base_url}}/eventos/7", "host": ["{{base_url}}"], "path": ["eventos", "7"]}
+					}
+				}
+			]
+		},
+		{
+			"name": "06 - Usuários",
+			"item": [
+				{
+					"name": "Listar Todos os Usuários",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {"raw": "{{base_url}}/usuarios/todos", "host": ["{{base_url}}"], "path": ["usuarios", "todos"]}
+					}
+				},
+				{
+					"name": "Buscar Usuário por ID",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+						"url": {"raw": "{{base_url}}/usuarios/1", "host": ["{{base_url}}"], "path": ["usuarios", "1"]}
+					}
+				},
+				{
+					"name": "Inserir Novo Usuário",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"pessoa\": {\"id\": 1},\n  \"rm\": \"RM2\",\n  \"senha\": \"senha123\",\n  \"permissao\": \"USER\",\n  \"dataCriacao\": \"2026-05-12\",\n  \"status\": \"ATIVO\"\n}"
+						},
+						"url": {"raw": "{{base_url}}/usuarios/novo", "host": ["{{base_url}}"], "path": ["usuarios", "novo"]}
+					}
+				}
+			]
+		}
+	]
+}
